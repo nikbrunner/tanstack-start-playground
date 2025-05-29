@@ -1,0 +1,6 @@
+schema: https://swapi-graphql.netlify.app/graphql
+documents: src/queries/**/*.{ts,tsx}
+generates:
+  ./src/queries/generated/:
+    preset: client
+    plugins: []
