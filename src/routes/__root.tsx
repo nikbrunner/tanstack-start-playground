@@ -1,6 +1,11 @@
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
+import {
+  createRootRoute,
+  HeadContent,
+  Outlet,
+  Scripts
+} from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
@@ -10,41 +15,42 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       {
-        charSet: "utf-8",
+        charSet: "utf-8"
       },
       {
         name: "viewport",
-        content: "width=device-width, initial-scale=1",
+        content: "width=device-width, initial-scale=1"
       },
       ...seo({
-        title: "TanStack Start | Type-Safe, Client-First, Full-Stack React Framework",
-        description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
-      }),
+        title:
+          "TanStack Start | Type-Safe, Client-First, Full-Stack React Framework",
+        description: `TanStack Start is a type-safe, client-first, full-stack React framework. `
+      })
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
-        href: "/apple-touch-icon.png",
+        href: "/apple-touch-icon.png"
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "32x32",
-        href: "/favicon-32x32.png",
+        href: "/favicon-32x32.png"
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "16x16",
-        href: "/favicon-16x16.png",
+        href: "/favicon-16x16.png"
       },
       { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
-      { rel: "icon", href: "/favicon.ico" },
-    ],
+      { rel: "icon", href: "/favicon.ico" }
+    ]
   }),
-  errorComponent: (props) => {
+  errorComponent: props => {
     return (
       <RootDocument>
         <DefaultCatchBoundary {...props} />
@@ -52,7 +58,7 @@ export const Route = createRootRoute({
     );
   },
   notFoundComponent: () => <NotFound />,
-  component: RootComponent,
+  component: RootComponent
 });
 
 function RootComponent() {
@@ -70,7 +76,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <div className="mx-auto flex flex-col items-center justify-center max-w-2xl py-8">
+        <div className="mx-auto flex max-w-2xl flex-col items-center justify-center py-8">
           {children}
         </div>
         <TanStackRouterDevtools position="bottom-right" />

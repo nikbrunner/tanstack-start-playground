@@ -4,11 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Context
 
-This is Nik's learning playground for exploring GraphQL with TanStack Start. 
+This is Nik's learning playground for exploring GraphQL with TanStack Start.
 
 The repository serves as an educational project to understand different GraphQL setups, SSR, and how various tools work together.
 
 ### Original Learning Goals
+
 - Understand GraphQL clients and whether they're needed with SSR
 - Explore minimal type-safe GraphQL setups
 - Learn how TanStack Server Functions work with GraphQL
@@ -17,6 +18,7 @@ The repository serves as an educational project to understand different GraphQL 
 - Explore integration patterns with TanStack Router/Start/Query
 
 ### Original Key Questions Being Explored
+
 1. When using SSR, do I need a GraphQL client?
 2. What is the most minimal approach to using type-safe GraphQL?
 3. How to handle authentication and session headers?
@@ -54,6 +56,7 @@ yarn codegen:watch
 This is a TanStack Start application demonstrating modern full-stack React patterns with GraphQL integration.
 
 ### Core Technologies
+
 - **TanStack Start**: Full-stack React framework with SSR capabilities
 - **TanStack Router**: File-based routing with type safety
 - **GraphQL**: Using codegen with TypedDocumentString approach
@@ -62,6 +65,7 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - **Biome**: Code formatting (replaces ESLint/Prettier)
 
 ### Project Structure
+
 - `src/routes/`: File-based routes (e.g., `index.tsx` → `/`, `starwars.tsx` → `/starwars`)
 - `src/graphql/`: Generated GraphQL types and utilities
 - `src/queries/`: GraphQL query definitions
@@ -69,6 +73,7 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - `src/utils/`: Legacy utilities (being replaced by new patterns)
 
 ### GraphQL Workflow
+
 1. Define queries in `src/queries/` using `graphql()` tag
 2. Run `yarn codegen` to generate types in `src/graphql/`
 3. Use the custom `query` function from `src/graphql/query.ts` for type-safe requests
@@ -77,6 +82,7 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 6. Schema source: Configured via `VITE_GRAPHQL_API_URL` env variable
 
 ### Branch Structure & Learning Progress
+
 - **main**: Base TanStack Start template
 - **01_minimal**: Inline GraphQL with fetch, no type safety
 - **02_codegen_vanilla**: Added graphql-request and basic codegen
@@ -84,6 +90,7 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - **04_improve_codegen_setup**: Fixed codegen types to use ExecutionResult pattern
 
 ### Key Patterns
+
 - **Data Loading**: Use route loaders for server-side data fetching
 - **Type Safety**: All GraphQL operations are fully typed via codegen
 - **Server Functions**: GraphQL executes server-side via TanStack Server Functions
@@ -92,6 +99,7 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - **SSR**: Server-side rendering enabled by default
 
 ### Configuration Files
+
 - `app.config.ts`: TanStack Start and Vite configuration
 - `codegen.ts`: GraphQL code generation configuration (uses env variable)
 - `biome.json`: Code formatting rules (2 spaces, double quotes)

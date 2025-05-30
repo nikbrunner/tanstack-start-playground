@@ -1,6 +1,6 @@
 # TanStack Start GraphQL Learning Playground
 
-This is my learning playground for exploring GraphQL with TanStack Start. 
+This is my learning playground for exploring GraphQL with TanStack Start.
 
 The repository documents a journey through different GraphQL setups, from minimal implementations to type-safe solutions with code generation.
 
@@ -18,28 +18,37 @@ The repository documents a journey through different GraphQL setups, from minima
 Each branch represents a different learning milestone:
 
 ### `main`
+
 Base TanStack Start template - the starting point
 
 ### `01_minimal`
+
 Minimal inline GraphQL with native fetch
+
 - No type safety
 - Direct fetch calls
 - Basic proof of concept
 
 ### `02_codegen_vanilla`
+
 Added graphql-request and basic codegen
+
 - Introduced GraphQL Code Generator
 - Basic type safety
 - Using graphql-request client
 
 ### `03_tanstack_server_function`
+
 Integrated TanStack Server Functions
+
 - Server-side GraphQL execution
 - Better SSR integration
 - Wrapped query function in server function
 
 ### `04_improve_codegen_setup` (current)
+
 Fixed codegen types to use ExecutionResult pattern
+
 - Proper error handling
 - Correct type structure following GraphQL spec
 - Environment variable configuration
@@ -86,17 +95,20 @@ yarn codegen:watch # Watch mode for GraphQL codegen
 ## 💡 Key Learnings So Far
 
 ### Do I need a GraphQL client with SSR?
+
 - **No**, you don't strictly need a GraphQL client library
 - Native fetch works fine, especially with TanStack Server Functions
 - Clients like urql/Apollo add caching and other features you might not need
 
 ### What's the minimal type-safe approach?
+
 - GraphQL Code Generator with TypedDocumentString
 - Define queries with `graphql()` tag function
 - Generate types with `yarn codegen`
 - Use a simple fetch wrapper that returns `ExecutionResult<T>`
 
 ### TanStack Server Functions + GraphQL?
+
 - **Yes!** They work great together
 - Server Functions ensure GraphQL queries run server-side
 - Perfect for SSR - data is fetched before rendering
@@ -113,11 +125,11 @@ const MY_QUERY = graphql(`
 `);
 
 // 2. Use in route loader (runs server-side)
-export const Route = createFileRoute('/my-route')({
+export const Route = createFileRoute("/my-route")({
   loader: async () => {
     const result = await query(MY_QUERY);
     if (result.errors) {
-      throw new Error('GraphQL errors');
+      throw new Error("GraphQL errors");
     }
     return result.data;
   }
