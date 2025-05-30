@@ -21,7 +21,7 @@ function Component() {
       <ul className="space-y-2">
         {films?.map(film => (
           <li key={film?.id} className="rounded p-4 ring-2 ring-gray-400">
-            <Link to="/film/$id" params={{ id: film?.id ?? "" }}>
+            <Link to="/film/$id" params={{ id: film?.id ?? "" }} preload="intent">
               <div className="mb-4 text-2xl font-bold text-blue-600">
                 {film?.title}
               </div>
