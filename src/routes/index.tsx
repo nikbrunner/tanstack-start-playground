@@ -1,15 +1,12 @@
 import { createFileRoute, ErrorComponent, Link } from "@tanstack/react-router";
-import { query } from "~/graphql/query";
-
-import { ALL_FILMS_QUERY } from "../queries/allFilms";
 
 export const Route = createFileRoute("/")({
   component: Component,
-  loader: async () => {
-    const filmsQuery = await query(ALL_FILMS_QUERY);
+  loader: async ({ context: { gql } }) => {
+    const filmsQuery = await gql.request(gql.queries.ALL_FILMS_QUERY);
 
     return {
-      films: filmsQuery.data?.allFilms?.films
+      films: filmsQuery.data?.allFilms?.films ?? []
     };
   },
   errorComponent: error => <ErrorComponent error={error} />

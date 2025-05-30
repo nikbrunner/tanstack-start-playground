@@ -31,7 +31,7 @@ const graphqlServerFn = createServerFn()
     return response.json();
   });
 
-export async function query<TResult, TVariables>(
+export async function request<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ): Promise<ExecutionResult<TResult>> {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {
-  createRootRoute,
+  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts
@@ -8,10 +8,19 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
+import type { request } from "~/graphql/request";
+import type * as queries from "~/queries";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 
-export const Route = createRootRoute({
+interface RouterContext {
+  gql: {
+    request: typeof request;
+    queries: typeof queries;
+  };
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {

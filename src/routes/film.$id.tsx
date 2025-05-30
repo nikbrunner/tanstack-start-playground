@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { query } from "~/graphql/query";
-import { FILM_QUERY } from "~/queries/film";
 
 export const Route = createFileRoute("/film/$id")({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const filmQuery = await query(FILM_QUERY, { id: params.id });
+  loader: async ({ params, context: { gql } }) => {
+    const filmQuery = await gql.request(gql.queries.FILM_QUERY, { id: params.id });
 
     return {
       film: filmQuery.data?.film

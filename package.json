@@ -9,6 +9,7 @@
     "start": "vinxi start",
     "format": "prettier --write .",
     "check:format": "prettier --list-different .",
+    "check:types": "yarn codegen && tsc --project tsconfig.json",
     "codegen": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
