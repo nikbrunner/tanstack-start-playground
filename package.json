@@ -4,19 +4,22 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
+    "dev": "concurrently yarn:dev:*",
+    "dev:router": "vinxi dev",
+    "dev:gql-codegen": "yarn gql:codegen:watch",
     "build": "vinxi build",
     "start": "vinxi start",
     "format": "prettier --write .",
     "check:format": "prettier --list-different .",
     "check:types": "yarn codegen && tsc --project tsconfig.json",
-    "codegen": "graphql-codegen --config codegen.ts",
-    "codegen:watch": "graphql-codegen --config codegen.ts --watch"
+    "gql:codegen": "graphql-codegen --config codegen.ts",
+    "gql:codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.120.11",
     "@tanstack/react-router-devtools": "^1.120.11",
     "@tanstack/react-start": "^1.120.11",
+    "concurrently": "^9.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
