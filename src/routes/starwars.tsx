@@ -1,22 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
-import type { AllFilmsQuery } from "../queries/generated/graphql";
+import { createFileRoute, ErrorComponent } from "@tanstack/react-router";
 import { ALL_FILMS_QUERY } from "../queries/allFilms";
-import { query } from "~/utils/query";
+import { query } from "~/graphql/query";
 
 export const Route = createFileRoute("/starwars")({
+  component: Component,
   loader: async () => {
-    const data = await query<AllFilmsQuery>(ALL_FILMS_QUERY);
-    return { films: data?.allFilms?.films };
+    const filmsQuery = await query(ALL_FILMS_QUERY);
+
+    return {
+      films: filmsQuery.data?.allFilms?.films,
+    };
   },
-  component: StarWarsFilms,
+  errorComponent: (error) => <ErrorComponent error={error} />,
 });
 
-function StarWarsFilms() {
+function Component() {
   const { films } = Route.useLoaderData();
-
-  if (!films) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="p-4">

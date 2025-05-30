@@ -1,6 +1,6 @@
-import { gql } from "graphql-tag";
+import { graphql } from "../graphql/";
 
-export const ALL_FILMS_QUERY = gql`
+export const ALL_FILMS_QUERY = graphql(`
   query AllFilms {
     allFilms {
       films {
@@ -16,4 +16,4 @@ export const ALL_FILMS_QUERY = gql`
       }
     }
   }
-`;
+`);
