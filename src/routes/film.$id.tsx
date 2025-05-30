@@ -17,17 +17,6 @@ function RouteComponent() {
 
   return (
     <div>
-      <button
-        className="mb-6 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-        onClick={() =>
-          navigate({
-            to: "/"
-          })
-        }
-      >
-        Go to all films
-      </button>
-
       <h1 className="mb-4 text-3xl font-bold text-blue-800">{film?.title}</h1>
       <div className="mb-2 text-lg text-gray-800">
         <span className="font-semibold text-black">Director:</span> {film?.director}
@@ -40,10 +29,17 @@ function RouteComponent() {
         <span className="font-semibold text-black">Release Date:</span>{" "}
         {film?.releaseDate}
       </div>
-      <div className="mt-4 max-w-2xl text-base leading-relaxed text-gray-400">
+      <div className="mb-6 mt-4 max-w-2xl text-base leading-relaxed text-gray-400">
         <span className="mb-2 block font-semibold text-black">Opening Crawl:</span>
         {film?.openingCrawl}
       </div>
+
+      <button
+        className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+        onClick={() => navigate({ to: "/" })}
+      >
+        Go to all films
+      </button>
     </div>
   );
 }

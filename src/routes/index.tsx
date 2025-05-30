@@ -16,7 +16,7 @@ function Component() {
   const { films } = Route.useLoaderData();
 
   return (
-    <div className="p-4">
+    <div>
       <h2 className="mb-4 text-5xl font-bold text-blue-800">Star Wars Films</h2>
       <ul className="space-y-2">
         {films?.map(film => (
