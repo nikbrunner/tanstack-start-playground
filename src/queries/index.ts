@@ -1,1 +1,1 @@
-export * from "./films";
+export * as films from "./films";

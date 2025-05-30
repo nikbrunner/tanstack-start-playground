@@ -11,11 +11,12 @@
     "start": "vinxi start",
     "format": "prettier --write .",
     "check:format": "prettier --list-different .",
-    "check:types": "yarn codegen && tsc --project tsconfig.json",
+    "check:types": "yarn gql:codegen && tsc --project tsconfig.json",
     "gql:codegen": "graphql-codegen --config codegen.ts",
     "gql:codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.79.0",
     "@tanstack/react-router": "^1.120.11",
     "@tanstack/react-router-devtools": "^1.120.11",
     "@tanstack/react-start": "^1.120.11",
@@ -29,6 +30,7 @@
     "@graphql-codegen/cli": "^5.0.6",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
     "@parcel/watcher": "^2.5.1",
+    "@tanstack/react-query-devtools": "^5.79.0",
     "@types/node": "^22.5.4",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",

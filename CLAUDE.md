@@ -38,17 +38,20 @@ yarn build
 # Start production server
 yarn start
 
-# Format code with Biome
+# Format code with Prettier
 yarn format
 
 # Check formatting
 yarn check:format
 
+# Check TypeScript types
+yarn check:types
+
 # Generate GraphQL types
-yarn codegen
+yarn gql:codegen
 
 # Watch mode for GraphQL codegen
-yarn codegen:watch
+yarn gql:codegen:watch
 ```
 
 ## High-Level Architecture
@@ -59,10 +62,11 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 
 - **TanStack Start**: Full-stack React framework with SSR capabilities
 - **TanStack Router**: File-based routing with type safety
+- **TanStack Query**: Client-side state management with caching
 - **GraphQL**: Using codegen with TypedDocumentString approach
 - **TypeScript**: Full type safety including generated GraphQL types
 - **Tailwind CSS**: Utility-first styling
-- **Biome**: Code formatting (replaces ESLint/Prettier)
+- **Prettier**: Code formatting with import sorting
 
 ### Project Structure
 
@@ -74,12 +78,12 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 
 ### GraphQL Workflow
 
-1. Define queries in `src/queries/` using `graphql()` tag
-2. Run `yarn codegen` to generate types in `src/graphql/`
-3. Use the custom `query` function from `src/graphql/query.ts` for type-safe requests
-4. Query function uses TanStack Server Functions for SSR execution
-5. Returns `ExecutionResult<T>` for proper error handling
-6. Schema source: Configured via `VITE_GRAPHQL_API_URL` env variable
+1. Define query options in `src/queries/` with inline `graphql()` queries
+2. Run `yarn gql:codegen` to generate types in `src/graphql/`
+3. Query options are exposed through router context as `queries.*`
+4. Routes use `queryClient.ensureQueryData` for SSR
+5. Components use `useSuspenseQuery` for client-side data
+6. All GraphQL requests use TanStack Server Functions
 
 ### Branch Structure & Learning Progress
 
@@ -88,20 +92,26 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - **02_codegen_vanilla**: Added graphql-request and basic codegen
 - **03_tanstack_server_function**: Integrated TanStack Server Functions
 - **04_improve_codegen_setup**: Fixed codegen types to use ExecutionResult pattern
+- **05_improve_formatting**: Switched from Biome to Prettier with import sorting
+- **06_using_router_context**: Centralized GraphQL through router context
+- **07_tanstack_query**: Added TanStack Query for SSR + client-side caching
 
 ### Key Patterns
 
-- **Data Loading**: Use route loaders for server-side data fetching
+- **Data Loading**: Route loaders with `queryClient.ensureQueryData` for SSR
+- **Client State**: `useSuspenseQuery` for client-side data with caching
 - **Type Safety**: All GraphQL operations are fully typed via codegen
+- **Query Organization**: Query options with inline GraphQL in domain files
+- **Context API**: Queries exposed through router context as `queries.*`
 - **Server Functions**: GraphQL executes server-side via TanStack Server Functions
-- **Error Handling**: Proper GraphQL error handling with ExecutionResult type
+- **Error Handling**: Proper GraphQL error handling in query functions
 - **Path Aliases**: Use `~/` for imports from `src/`
-- **SSR**: Server-side rendering enabled by default
+- **SSR + Hydration**: Server renders with data, client hydrates with cache
 
 ### Configuration Files
 
 - `app.config.ts`: TanStack Start and Vite configuration
 - `codegen.ts`: GraphQL code generation configuration (uses env variable)
-- `biome.json`: Code formatting rules (2 spaces, double quotes)
+- `.prettierrc`: Code formatting rules with import sorting
 - `tsconfig.json`: TypeScript configuration with path aliases
 - `.env`: Contains `VITE_GRAPHQL_API_URL` for GraphQL endpoint

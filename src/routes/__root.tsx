@@ -1,4 +1,6 @@
 import * as React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -8,16 +10,15 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
-import type { request } from "~/graphql/request";
-import type * as queries from "~/queries";
+import * as queries from "~/queries";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 
 interface RouterContext {
-  gql: {
-    request: typeof request;
-    queries: typeof queries;
-  };
+  /** The GraphQL queries library */
+  queries: typeof queries;
+  /** The TanStack Query Client */
+  queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -71,10 +72,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootComponent() {
+  const { queryClient } = Route.useRouteContext();
+
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <QueryClientProvider client={queryClient}>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </QueryClientProvider>
   );
 }
 
@@ -89,6 +94,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           {children}
         </div>
         <TanStackRouterDevtools position="bottom-right" />
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          position="top"
+          buttonPosition="top-right"
+        />
         <Scripts />
       </body>
     </html>
