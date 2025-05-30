@@ -1,73 +1,138 @@
-# Welcome to TanStack.com!
+# TanStack Start GraphQL Learning Playground
 
-This site is built with TanStack Router!
+This is my learning playground for exploring GraphQL with TanStack Start. 
 
-- [TanStack Router Docs](https://tanstack.com/router)
-- [router/examples/react/start-basic/src at main · TanStack/router](https://github.com/TanStack/router/tree/main/examples/react/start-basic/src)
+The repository documents a journey through different GraphQL setups, from minimal implementations to type-safe solutions with code generation.
 
-It's deployed automagically with Netlify!
+## 🎯 Learning Objectives
 
-- [Netlify](https://netlify.com/)
+- Understand GraphQL clients and their role with SSR
+- Explore minimal type-safe GraphQL setups
+- Learn how TanStack Server Functions integrate with GraphQL
+- Compare different approaches (codegen vs gql.tada)
+- Understand authentication and session handling
+- Explore integration patterns with TanStack Router/Start/Query
 
-## Development
+## 🌳 Branch Structure
 
-From your terminal:
+Each branch represents a different learning milestone:
 
-```sh
-pnpm install
-pnpm dev
+### `main`
+Base TanStack Start template - the starting point
+
+### `01_minimal`
+Minimal inline GraphQL with native fetch
+- No type safety
+- Direct fetch calls
+- Basic proof of concept
+
+### `02_codegen_vanilla`
+Added graphql-request and basic codegen
+- Introduced GraphQL Code Generator
+- Basic type safety
+- Using graphql-request client
+
+### `03_tanstack_server_function`
+Integrated TanStack Server Functions
+- Server-side GraphQL execution
+- Better SSR integration
+- Wrapped query function in server function
+
+### `04_improve_codegen_setup` (current)
+Fixed codegen types to use ExecutionResult pattern
+- Proper error handling
+- Correct type structure following GraphQL spec
+- Environment variable configuration
+
+## 📚 Documentation Links
+
+- https://nearform.com/open-source/urql/docs/basics/typescript-integration/
+- https://tanstack.com/start/latest/docs/framework/react/static-server-functions
+- https://tanstack.com/query/latest/docs/framework/react/graphql
+- https://tanstack.com/router/latest/docs/framework/react/guide/data-loading
+- https://the-guild.dev/graphql/codegen/docs/guides/vanilla-typescript
+- https://the-guild.dev/graphql/codegen/docs/guides/react-query
+- https://the-guild.dev/graphql/codegen/docs/guides/react-vue
+- https://github.com/0no-co/gql.tada
+
+## 🚀 Getting Started
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd tanstack-start-playground
+
+# Install dependencies
+yarn install
+
+# Copy environment variables
+cp .env.example .env  # (or create .env with VITE_GRAPHQL_API_URL)
+
+# Start development server
+yarn dev
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+## 📝 Available Scripts
 
-## Editing and previewing the docs of TanStack projects locally
-
-The documentations for all TanStack projects except for `React Charts` are hosted on [https://tanstack.com](https://tanstack.com), powered by this TanStack Router app.
-In production, the markdown doc pages are fetched from the GitHub repos of the projects, but in development they are read from the local file system.
-
-Follow these steps if you want to edit the doc pages of a project (in these steps we'll assume it's [`TanStack/form`](https://github.com/tanstack/form)) and preview them locally :
-
-1. Create a new directory called `tanstack`.
-
-```sh
-mkdir tanstack
+```bash
+yarn dev          # Start development server
+yarn build        # Build for production
+yarn start        # Start production server
+yarn format       # Format code with Biome
+yarn codegen      # Generate GraphQL types
+yarn codegen:watch # Watch mode for GraphQL codegen
 ```
 
-2. Enter the directory and clone this repo and the repo of the project there.
+## 💡 Key Learnings So Far
 
-```sh
-cd tanstack
-git clone git@github.com:TanStack/tanstack.com.git
-git clone git@github.com:TanStack/form.git
+### Do I need a GraphQL client with SSR?
+- **No**, you don't strictly need a GraphQL client library
+- Native fetch works fine, especially with TanStack Server Functions
+- Clients like urql/Apollo add caching and other features you might not need
+
+### What's the minimal type-safe approach?
+- GraphQL Code Generator with TypedDocumentString
+- Define queries with `graphql()` tag function
+- Generate types with `yarn codegen`
+- Use a simple fetch wrapper that returns `ExecutionResult<T>`
+
+### TanStack Server Functions + GraphQL?
+- **Yes!** They work great together
+- Server Functions ensure GraphQL queries run server-side
+- Perfect for SSR - data is fetched before rendering
+- No client-side GraphQL requests needed for initial page load
+
+## 🏗️ Current Architecture
+
+```typescript
+// 1. Define your query
+const MY_QUERY = graphql(`
+  query MyQuery {
+    # your GraphQL query
+  }
+`);
+
+// 2. Use in route loader (runs server-side)
+export const Route = createFileRoute('/my-route')({
+  loader: async () => {
+    const result = await query(MY_QUERY);
+    if (result.errors) {
+      throw new Error('GraphQL errors');
+    }
+    return result.data;
+  }
+});
 ```
 
-> [!NOTE]
-> Your `tanstack` directory should look like this:
->
-> ```
-> tanstack/
->    |
->    +-- form/
->    |
->    +-- tanstack.com/
-> ```
+## 🔮 Next Steps to Explore
 
-> [!WARNING]
-> Make sure the name of the directory in your local file system matches the name of the project's repo. For example, `tanstack/form` must be cloned into `form` (this is the default) instead of `some-other-name`, because that way, the doc pages won't be found.
+- [ ] TanStack Query integration for client-side caching
+- [ ] Comparison with gql.tada approach
+- [ ] Authentication with GraphQL headers
+- [ ] Mutations and optimistic updates
+- [ ] File uploads with GraphQL
+- [ ] Subscriptions with SSR
 
-3. Enter the `tanstack/tanstack.com` directory, install the dependencies and run the app in dev mode:
+## 🤝 Contributing
 
-```sh
-cd tanstack.com
-pnpm i
-# The app will run on https://localhost:3000 by default
-pnpm dev
-```
-
-4. Now you can visit http://localhost:3000/form/latest/docs/overview in the browser and see the changes you make in `tanstack/form/docs`.
-
-> [!NOTE]
-> The updated pages need to be manually reloaded in the browser.
-
-> [!WARNING]
-> You will need to update the `docs/config.json` file (in the project's repo) if you add a new doc page!
+This is a learning playground - feel free to explore and experiment!
