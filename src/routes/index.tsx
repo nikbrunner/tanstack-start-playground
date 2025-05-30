@@ -1,6 +1,7 @@
 import { createFileRoute, ErrorComponent, Link } from "@tanstack/react-router";
-import { ALL_FILMS_QUERY } from "../queries/allFilms";
 import { query } from "~/graphql/query";
+
+import { ALL_FILMS_QUERY } from "../queries/allFilms";
 
 export const Route = createFileRoute("/")({
   component: Component,
@@ -8,10 +9,10 @@ export const Route = createFileRoute("/")({
     const filmsQuery = await query(ALL_FILMS_QUERY);
 
     return {
-      films: filmsQuery.data?.allFilms?.films,
+      films: filmsQuery.data?.allFilms?.films
     };
   },
-  errorComponent: (error) => <ErrorComponent error={error} />,
+  errorComponent: error => <ErrorComponent error={error} />
 });
 
 function Component() {
@@ -19,15 +20,17 @@ function Component() {
 
   return (
     <div className="p-4">
-      <h2 className="text-5xl font-bold text-blue-800 mb-4">Star Wars Films</h2>
+      <h2 className="mb-4 text-5xl font-bold text-blue-800">Star Wars Films</h2>
       <ul className="space-y-2">
-        {films?.map((film) => (
-          <li key={film?.id} className="ring-2 ring-gray-400 rounded p-4">
+        {films?.map(film => (
+          <li key={film?.id} className="rounded p-4 ring-2 ring-gray-400">
             <Link to="/film/$id" params={{ id: film?.id ?? "" }}>
-              <div className="text-2xl font-bold text-blue-600 mb-4">{film?.title}</div>
+              <div className="mb-4 text-2xl font-bold text-blue-600">
+                {film?.title}
+              </div>
             </Link>
 
-            <div className="text-sm text-gray-500 mb-2">
+            <div className="mb-2 text-sm text-gray-500">
               Directed by {film?.director} &middot; Released: {film?.releaseDate}
             </div>
 
@@ -36,7 +39,8 @@ function Component() {
               return (
                 <span key={species?.name}>
                   {species?.name}
-                  {index !== (film?.speciesConnection?.species?.length ?? 0) - 1 && ", "}
+                  {index !== (film?.speciesConnection?.species?.length ?? 0) - 1 &&
+                    ", "}
                 </span>
               );
             })}

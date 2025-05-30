@@ -2,7 +2,7 @@ export const seo = ({
   title,
   description,
   keywords,
-  image,
+  image
 }: {
   title: string;
   description?: string;
@@ -24,9 +24,9 @@ export const seo = ({
       ? [
           { name: "twitter:image", content: image },
           { name: "twitter:card", content: "summary_large_image" },
-          { name: "og:image", content: image },
+          { name: "og:image", content: image }
         ]
-      : []),
+      : [])
   ];
 
   return tags;

@@ -7,8 +7,8 @@
     "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
-    "format": "biome format --write .",
-    "check:format": "biome format .",
+    "format": "prettier --write .",
+    "check:format": "prettier --list-different .",
     "codegen": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
@@ -22,8 +22,8 @@
     "vinxi": "0.5.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@graphql-codegen/cli": "^5.0.6",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
     "@parcel/watcher": "^2.5.1",
     "@types/node": "^22.5.4",
     "@types/react": "^19.0.8",
@@ -32,6 +32,8 @@
     "dotenv": "^16.5.0",
     "graphql": "^16.11.0",
     "postcss": "^8.5.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2",
     "vite-tsconfig-paths": "^5.1.4"

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { ExecutionResult } from "graphql";
+
 import type { TypedDocumentString } from "./graphql";
 
 const graphqlServerFn = createServerFn()
@@ -15,12 +16,12 @@ const graphqlServerFn = createServerFn()
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/graphql-response+json",
+        Accept: "application/graphql-response+json"
       },
       body: JSON.stringify({
         query: data.query,
-        variables: data.variables,
-      }),
+        variables: data.variables
+      })
     });
 
     if (!response.ok) {
@@ -37,6 +38,6 @@ export async function query<TResult, TVariables>(
   const queryString = query.toString();
 
   return graphqlServerFn({
-    data: { query: queryString, variables },
+    data: { query: queryString, variables }
   }) as Promise<ExecutionResult<TResult>>;
 }
