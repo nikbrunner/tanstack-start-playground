@@ -1,19 +1,18 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/film/$id")({
   component: RouteComponent,
-  loader: async ({ params, context: { gql } }) => {
-    const filmQuery = await gql.request(gql.queries.FILM_QUERY, { id: params.id });
-
-    return {
-      film: filmQuery.data?.film
-    };
+  loader: async ({ params, context: { queryClient, queries } }) => {
+    return await queryClient.ensureQueryData(queries.films.byId(params.id));
   }
 });
 
 function RouteComponent() {
-  const { film } = Route.useLoaderData();
   const navigate = Route.useNavigate();
+  const { queries } = Route.useRouteContext();
+  const { id } = Route.useParams();
+  const { data: film } = useSuspenseQuery(queries.films.byId(id));
 
   return (
     <div>

@@ -1,19 +1,17 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, ErrorComponent, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Component,
-  loader: async ({ context: { gql } }) => {
-    const filmsQuery = await gql.request(gql.queries.ALL_FILMS_QUERY);
-
-    return {
-      films: filmsQuery.data?.allFilms?.films ?? []
-    };
+  loader: async ({ context: { queryClient, queries } }) => {
+    return await queryClient.ensureQueryData(queries.films.all());
   },
   errorComponent: error => <ErrorComponent error={error} />
 });
 
 function Component() {
-  const { films } = Route.useLoaderData();
+  const { queries } = Route.useRouteContext();
+  const { data: films } = useSuspenseQuery(queries.films.all());
 
   return (
     <div>

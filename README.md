@@ -45,13 +45,38 @@ Integrated TanStack Server Functions
 - Better SSR integration
 - Wrapped query function in server function
 
-### `04_improve_codegen_setup` (current)
+### `04_improve_codegen_setup`
 
 Fixed codegen types to use ExecutionResult pattern
 
 - Proper error handling
 - Correct type structure following GraphQL spec
 - Environment variable configuration
+
+### `05_improve_formatting`
+
+Replaced Biome with Prettier and sort-imports plugin
+
+- Better formatting consistency
+- Import sorting
+- More mature ecosystem
+
+### `06_using_router_context`
+
+Implemented router context for GraphQL queries
+
+- Centralized GraphQL API through context
+- Clean separation of concerns
+- No direct imports needed in routes
+
+### `07_tanstack_query` (current)
+
+Added TanStack Query for client-side state management
+
+- SSR with `queryClient.ensureQueryData`
+- Client-side caching and refetching
+- Clean query options API with namespace structure
+- Inline GraphQL queries for better developer experience
 
 ## 📚 Documentation Links
 
@@ -84,12 +109,14 @@ yarn dev
 ## 📝 Available Scripts
 
 ```bash
-yarn dev          # Start development server
-yarn build        # Build for production
-yarn start        # Start production server
-yarn format       # Format code with Biome
-yarn codegen      # Generate GraphQL types
-yarn codegen:watch # Watch mode for GraphQL codegen
+yarn dev               # Start development server (with concurrent codegen)
+yarn build             # Build for production
+yarn start             # Start production server
+yarn format            # Format code with Prettier
+yarn check:format      # Check formatting
+yarn check:types       # Run TypeScript type checking
+yarn gql:codegen       # Generate GraphQL types
+yarn gql:codegen:watch # Watch mode for GraphQL codegen
 ```
 
 ## 💡 Key Learnings So Far
@@ -117,33 +144,47 @@ yarn codegen:watch # Watch mode for GraphQL codegen
 ## 🏗️ Current Architecture
 
 ```typescript
-// 1. Define your query
-const MY_QUERY = graphql(`
-  query MyQuery {
-    # your GraphQL query
-  }
-`);
-
-// 2. Use in route loader (runs server-side)
-export const Route = createFileRoute("/my-route")({
-  loader: async () => {
-    const result = await query(MY_QUERY);
-    if (result.errors) {
-      throw new Error("GraphQL errors");
+// 1. Define query options with inline GraphQL
+export const all = () =>
+  queryOptions({
+    queryKey: ["films", "all"],
+    queryFn: async () => {
+      const result = await request(
+        graphql(`
+          query AllFilms {
+            # your GraphQL query
+          }
+        `)
+      );
+      if (result.errors) throw new Error(result.errors[0].message);
+      return result.data?.allFilms?.films;
     }
-    return result.data;
+  });
+
+// 2. Use in route with TanStack Query
+export const Route = createFileRoute("/")({
+  loader: async ({ context: { queryClient, queries } }) => {
+    // Ensure data is loaded on server
+    await queryClient.ensureQueryData(queries.films.all());
+  },
+  component: () => {
+    // Use suspense query for client-side
+    const { data } = useSuspenseQuery(queries.films.all());
+    return <div>{/* render data */}</div>;
   }
 });
 ```
 
 ## 🔮 Next Steps to Explore
 
-- [ ] TanStack Query integration for client-side caching
+- [x] TanStack Query integration for client-side caching ✅
 - [ ] Comparison with gql.tada approach
 - [ ] Authentication with GraphQL headers
 - [ ] Mutations and optimistic updates
 - [ ] File uploads with GraphQL
 - [ ] Subscriptions with SSR
+- [ ] Error boundaries with TanStack Query
+- [ ] Infinite queries for pagination
 
 ## 🤝 Contributing
 
