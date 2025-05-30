@@ -1299,6 +1299,22 @@ export type AllFilmsQuery = {
   } | null;
 };
 
+export type FilmQueryVariables = Exact<{
+  id?: InputMaybe<Scalars["ID"]["input"]>;
+}>;
+
+export type FilmQuery = {
+  __typename?: "Root";
+  film?: {
+    __typename?: "Film";
+    title?: string | null;
+    director?: string | null;
+    producers?: Array<string | null> | null;
+    releaseDate?: string | null;
+    openingCrawl?: string | null;
+  } | null;
+};
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -1335,3 +1351,14 @@ export const AllFilmsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AllFilmsQuery, AllFilmsQueryVariables>;
+export const FilmDocument = new TypedDocumentString(`
+    query Film($id: ID) {
+  film(id: $id) {
+    title
+    director
+    producers
+    releaseDate
+    openingCrawl
+  }
+}
+    `) as unknown as TypedDocumentString<FilmQuery, FilmQueryVariables>;

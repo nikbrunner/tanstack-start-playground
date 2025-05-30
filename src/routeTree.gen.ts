@@ -10,85 +10,85 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as StarwarsImport } from "./routes/starwars";
-import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as IndexImport } from './routes/index'
+import { Route as FilmIdImport } from './routes/film.$id'
 
 // Create/Update Routes
 
-const StarwarsRoute = StarwarsImport.update({
-  id: "/starwars",
-  path: "/starwars",
-  getParentRoute: () => rootRoute,
-} as any);
-
 const IndexRoute = IndexImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
+
+const FilmIdRoute = FilmIdImport.update({
+  id: '/film/$id',
+  path: '/film/$id',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/starwars": {
-      id: "/starwars";
-      path: "/starwars";
-      fullPath: "/starwars";
-      preLoaderRoute: typeof StarwarsImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/film/$id': {
+      id: '/film/$id'
+      path: '/film/$id'
+      fullPath: '/film/$id'
+      preLoaderRoute: typeof FilmIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/starwars": typeof StarwarsRoute;
+  '/': typeof IndexRoute
+  '/film/$id': typeof FilmIdRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/starwars": typeof StarwarsRoute;
+  '/': typeof IndexRoute
+  '/film/$id': typeof FilmIdRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexRoute;
-  "/starwars": typeof StarwarsRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/film/$id': typeof FilmIdRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/starwars";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/starwars";
-  id: "__root__" | "/" | "/starwars";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/film/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/film/$id'
+  id: '__root__' | '/' | '/film/$id'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  StarwarsRoute: typeof StarwarsRoute;
+  IndexRoute: typeof IndexRoute
+  FilmIdRoute: typeof FilmIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  StarwarsRoute: StarwarsRoute,
-};
+  FilmIdRoute: FilmIdRoute,
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -97,14 +97,14 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/starwars"
+        "/film/$id"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/starwars": {
-      "filePath": "starwars.tsx"
+    "/film/$id": {
+      "filePath": "film.$id.tsx"
     }
   }
 }

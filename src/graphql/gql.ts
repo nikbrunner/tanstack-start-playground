@@ -14,10 +14,13 @@ import * as types from "./graphql";
  */
 type Documents = {
   "\n  query AllFilms {\n    allFilms {\n      films {\n        id\n        title\n        releaseDate\n        director\n        speciesConnection {\n          species {\n            name\n          }\n        }\n      }\n    }\n  }\n": typeof types.AllFilmsDocument;
+  "\n    query Film ($id: ID) {\n      film(id: $id) {\n        title\n        director\n        producers\n        releaseDate\n        openingCrawl\n      }\n    }\n": typeof types.FilmDocument;
 };
 const documents: Documents = {
   "\n  query AllFilms {\n    allFilms {\n      films {\n        id\n        title\n        releaseDate\n        director\n        speciesConnection {\n          species {\n            name\n          }\n        }\n      }\n    }\n  }\n":
     types.AllFilmsDocument,
+  "\n    query Film ($id: ID) {\n      film(id: $id) {\n        title\n        director\n        producers\n        releaseDate\n        openingCrawl\n      }\n    }\n":
+    types.FilmDocument,
 };
 
 /**
@@ -26,6 +29,12 @@ const documents: Documents = {
 export function graphql(
   source: "\n  query AllFilms {\n    allFilms {\n      films {\n        id\n        title\n        releaseDate\n        director\n        speciesConnection {\n          species {\n            name\n          }\n        }\n      }\n    }\n  }\n",
 ): typeof import("./graphql").AllFilmsDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n    query Film ($id: ID) {\n      film(id: $id) {\n        title\n        director\n        producers\n        releaseDate\n        openingCrawl\n      }\n    }\n",
+): typeof import("./graphql").FilmDocument;
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
