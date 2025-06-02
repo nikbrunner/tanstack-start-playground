@@ -178,12 +178,9 @@ export const Route = createFileRoute("/")({
 ## 🔮 Next Steps to Explore
 
 - [x] TanStack Query integration for client-side caching ✅
-- [ ] Comparison with gql.tada approach
+- [x] Comparison with gql.tada approach
 - [ ] Authentication with GraphQL headers
 - [ ] Mutations and optimistic updates
-- [ ] File uploads with GraphQL
-- [ ] Subscriptions with SSR
-- [ ] Error boundaries with TanStack Query
 - [ ] Infinite queries for pagination
 
 ## 🤝 Contributing

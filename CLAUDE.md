@@ -44,14 +44,15 @@ yarn format
 # Check formatting
 yarn check:format
 
-# Check TypeScript types
+# Check TypeScript types and GraphQL queries
 yarn check:types
 
-# Generate GraphQL types
-yarn gql:codegen
-
-# Watch mode for GraphQL codegen
-yarn gql:codegen:watch
+# GraphQL-specific commands
+yarn gql:doctor      # Check gql.tada setup
+yarn gql:check       # Validate GraphQL queries
+yarn gql:generate    # Update schema introspection
+yarn gql:schema      # Download latest schema
+yarn gql:turbo       # Optimize for large codebases
 ```
 
 ## High-Level Architecture
@@ -63,27 +64,32 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - **TanStack Start**: Full-stack React framework with SSR capabilities
 - **TanStack Router**: File-based routing with type safety
 - **TanStack Query**: Client-side state management with caching
-- **GraphQL**: Using codegen with TypedDocumentString approach
-- **TypeScript**: Full type safety including generated GraphQL types
+- **gql.tada**: Instant GraphQL type inference without build step
+- **TypeScript**: Full type safety with real-time GraphQL type checking
 - **Tailwind CSS**: Utility-first styling
 - **Prettier**: Code formatting with import sorting
+- **Yarn Berry**: Modern package manager (v4.9.1)
 
 ### Project Structure
 
-- `src/routes/`: File-based routes (e.g., `index.tsx` → `/`, `starwars.tsx` → `/starwars`)
-- `src/graphql/`: Generated GraphQL types and utilities
-- `src/queries/`: GraphQL query definitions
+- `src/routes/`: File-based routes (e.g., `index.tsx` → `/`, `film.$id.tsx` → `/film/:id`)
+- `src/graphql/`: gql.tada setup and generated introspection types
+  - `index.ts`: Main graphql instance with type configuration
+  - `graphql-env.d.ts`: Auto-generated schema introspection
+  - `request.ts`: GraphQL request function using server functions
+- `src/queries/`: GraphQL query definitions with inline queries
 - `src/components/`: Shared React components
-- `src/utils/`: Legacy utilities (being replaced by new patterns)
+- `src/utils/`: Utilities (query client, logging middleware, etc.)
 
-### GraphQL Workflow
+### GraphQL Workflow with gql.tada
 
-1. Define query options in `src/queries/` with inline `graphql()` queries
-2. Run `yarn gql:codegen` to generate types in `src/graphql/`
+1. Write queries using `graphql()` from gql.tada - get instant type inference
+2. Types are inferred automatically as you type (no build step needed)
 3. Query options are exposed through router context as `queries.*`
 4. Routes use `queryClient.ensureQueryData` for SSR
 5. Components use `useSuspenseQuery` for client-side data
 6. All GraphQL requests use TanStack Server Functions
+7. Run `yarn gql:generate` occasionally to update schema introspection
 
 ### Branch Structure & Learning Progress
 
@@ -95,23 +101,26 @@ This is a TanStack Start application demonstrating modern full-stack React patte
 - **05_improve_formatting**: Switched from Biome to Prettier with import sorting
 - **06_using_router_context**: Centralized GraphQL through router context
 - **07_tanstack_query**: Added TanStack Query for SSR + client-side caching
+- **08_gql_tada**: Migrated to gql.tada for instant type inference, upgraded to Yarn Berry
 
 ### Key Patterns
 
 - **Data Loading**: Route loaders with `queryClient.ensureQueryData` for SSR
 - **Client State**: `useSuspenseQuery` for client-side data with caching
-- **Type Safety**: All GraphQL operations are fully typed via codegen
+- **Type Safety**: Instant GraphQL type inference via gql.tada (no build step)
 - **Query Organization**: Query options with inline GraphQL in domain files
 - **Context API**: Queries exposed through router context as `queries.*`
 - **Server Functions**: GraphQL executes server-side via TanStack Server Functions
 - **Error Handling**: Proper GraphQL error handling in query functions
 - **Path Aliases**: Use `~/` for imports from `src/`
 - **SSR + Hydration**: Server renders with data, client hydrates with cache
+- **Real-time Types**: TypeScript plugin provides immediate feedback on GraphQL queries
 
 ### Configuration Files
 
 - `app.config.ts`: TanStack Start and Vite configuration
-- `codegen.ts`: GraphQL code generation configuration (uses env variable)
 - `.prettierrc`: Code formatting rules with import sorting
-- `tsconfig.json`: TypeScript configuration with path aliases
+- `tsconfig.json`: TypeScript configuration with gql.tada plugin
 - `.env`: Contains `VITE_GRAPHQL_API_URL` for GraphQL endpoint
+- `.yarnrc.yml`: Yarn Berry configuration
+- `.vscode/settings.json`: VSCode TypeScript workspace settings
