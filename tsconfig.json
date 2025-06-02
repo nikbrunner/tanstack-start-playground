@@ -17,6 +17,13 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "noEmit": true
+    "noEmit": true,
+    "plugins": [
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "https://swapi-graphql.netlify.app/graphql",
+        "tadaOutputLocation": "./src/graphql/graphql-env.d.ts"
+      }
+    ]
   }
 }

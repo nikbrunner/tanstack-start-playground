@@ -3,6 +3,7 @@
 This guide explains how data flows through the application using TanStack Start, TanStack Query, and GraphQL with Server Functions.
 
 ## Table of Contents
+
 - [Query Flow](#query-flow)
 - [Mutation Flow](#mutation-flow)
 - [Examples](#examples)
@@ -32,19 +33,19 @@ sequenceDiagram
     QueryClient-->>Route Loader: Return data
     Route Loader-->>TanStack Router: Loader complete
     TanStack Router->>Browser: Render HTML with data
-    
+
     Note over Browser: Page displays instantly (SSR)
-    
+
     Browser->>Browser: React Hydration
     Browser->>Route Loader: Execute loader (client-side)
     Route Loader->>QueryClient: ensureQueryData(queries.films.all())
     QueryClient->>QueryClient: Check cache (data exists!)
     QueryClient-->>Route Loader: Return cached data
-    
+
     Browser->>Browser: Component mounts
     Browser->>QueryClient: useSuspenseQuery(queries.films.all())
     QueryClient-->>Browser: Return cached data (no fetch!)
-    
+
     Note over Browser: Background refresh may occur based on staleTime
 ```
 
@@ -66,15 +67,15 @@ sequenceDiagram
     RouteLoader->>QueryClient: ensureQueryData(queries.films.byId(id))
     QueryClient->>QueryClient: Check cache (empty for this ID)
     QueryClient->>ServerFunction: Execute queryFn (RPC call)
-    
+
     Note over ServerFunction: Executes on server via /_server endpoint
-    
+
     ServerFunction->>GraphQLAPI: POST GraphQL Query
     GraphQLAPI-->>ServerFunction: Return film data
     ServerFunction-->>QueryClient: Return data
     QueryClient->>QueryClient: Cache data
     QueryClient-->>RouteLoader: Return data
-    
+
     User->>LinkComponent: Click link
     LinkComponent->>TanStackRouter: Navigate
     TanStackRouter->>Browser: Instant render (data already cached!)
@@ -100,13 +101,13 @@ sequenceDiagram
     Server Function->>GraphQL API: POST GraphQL Mutation
     GraphQL API-->>Server Function: Return success/data
     Server Function-->>useMutation: Return result
-    
+
     alt Success
         useMutation->>QueryClient: Invalidate queries
         QueryClient->>QueryClient: Mark affected queries as stale
         useMutation->>Component: onSuccess callback
         Component->>Component: Update UI
-        
+
         Note over QueryClient: Background refetch triggered
         QueryClient->>Server Function: Refetch stale queries
         Server Function->>GraphQL API: Fetch fresh data
@@ -132,17 +133,17 @@ sequenceDiagram
 
     User->>Component: Click "Toggle Favorite"
     Component->>useMutation: mutate({ filmId })
-    
+
     Note over useMutation: onMutate callback
     useMutation->>QueryClient: getQueryData(["films", filmId])
     QueryClient-->>useMutation: Current data
     useMutation->>useMutation: Save snapshot
     useMutation->>QueryClient: setQueryData (optimistic)
     QueryClient-->>Component: Instant UI update!
-    
+
     useMutation->>Server Function: Execute mutation
     Server Function->>GraphQL API: POST GraphQL Mutation
-    
+
     alt Success
         GraphQL API-->>Server Function: Success
         Server Function-->>useMutation: Return result
@@ -184,13 +185,13 @@ export const all = () =>
           }
         }
       `);
-      
+
       const result = await request(query);
-      
+
       if (result.errors) {
         throw new Error(result.errors[0].message);
       }
-      
+
       return result.data?.allFilms?.films;
     }
   });
@@ -205,7 +206,7 @@ export const Route = createFileRoute("/")({
     const { queries } = Route.useRouteContext();
     // Subscribe to query updates
     const { data: films } = useSuspenseQuery(queries.films.all());
-    
+
     return <FilmList films={films} />;
   }
 });
@@ -226,13 +227,13 @@ export const addToFavorites = () =>
           }
         }
       `);
-      
+
       const result = await request(mutation, { filmId });
-      
+
       if (result.errors) {
         throw new Error(result.errors[0].message);
       }
-      
+
       return result.data?.addToFavorites;
     },
     onSuccess: (data, variables, context) => {
@@ -246,23 +247,23 @@ export const addToFavorites = () =>
 function FavoriteButton({ filmId }: { filmId: string }) {
   const { queries } = Route.useRouteContext();
   const queryClient = useQueryClient();
-  
+
   const mutation = useMutation({
     ...queries.films.addToFavorites(),
     // Optimistic update
     onMutate: async (filmId) => {
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["films", filmId] });
-      
+
       // Snapshot previous value
       const previousFilm = queryClient.getQueryData(["films", filmId]);
-      
+
       // Optimistically update
       queryClient.setQueryData(["films", filmId], old => ({
         ...old,
         isFavorite: true
       }));
-      
+
       // Return context with snapshot
       return { previousFilm };
     },
@@ -273,9 +274,9 @@ function FavoriteButton({ filmId }: { filmId: string }) {
       }
     }
   });
-  
+
   return (
-    <button 
+    <button
       onClick={() => mutation.mutate(filmId)}
       disabled={mutation.isPending}
     >
@@ -302,13 +303,13 @@ export const updateFilm = () =>
           }
         }
       `);
-      
+
       const result = await request(mutation, { id, input: updates });
-      
+
       if (result.errors) {
         throw new Error(result.errors[0].message);
       }
-      
+
       return result.data?.updateFilm;
     }
   });
@@ -318,26 +319,26 @@ function EditFilmForm({ film }: { film: Film }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { queries } = Route.useRouteContext();
-  
+
   const mutation = useMutation({
     ...queries.films.updateFilm(),
     onSuccess: (updatedFilm) => {
       // Update the specific film in cache
       queryClient.setQueryData(
-        ["films", updatedFilm.id], 
+        ["films", updatedFilm.id],
         updatedFilm
       );
-      
+
       // Also update it in the list
-      queryClient.setQueryData(["films", "all"], (old) => 
+      queryClient.setQueryData(["films", "all"], (old) =>
         old?.map(f => f.id === updatedFilm.id ? updatedFilm : f)
       );
-      
+
       // Navigate back
       router.navigate({ to: "/films/$id", params: { id: film.id } });
     }
   });
-  
+
   const handleSubmit = (formData: FormData) => {
     mutation.mutate({
       id: film.id,
@@ -346,7 +347,7 @@ function EditFilmForm({ film }: { film: Film }) {
       releaseDate: formData.get("releaseDate")
     });
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       {/* Form fields */}
@@ -364,36 +365,42 @@ function EditFilmForm({ film }: { film: Film }) {
 ## Key Concepts
 
 ### 1. Server Functions
+
 - All GraphQL requests go through TanStack Server Functions
 - Execute on the server, even when called from client
-- Provide automatic RPC endpoints (/_server/...)
+- Provide automatic RPC endpoints (/\_server/...)
 - Keep GraphQL endpoint secure and hidden from client
 
 ### 2. Query Lifecycle
+
 - **SSR**: Loader fetches data server-side
 - **Hydration**: Client reuses server data
 - **Background Refresh**: Based on staleTime
 - **Prefetching**: Via router preload prop
 
 ### 3. Cache Management
+
 - QueryClient holds all cached data
 - Queries are identified by unique keys
 - `ensureQueryData`: Fetch only if not cached
 - `invalidateQueries`: Mark as stale for refetch
 
 ### 4. Mutation Patterns
+
 - **Basic**: Simple fire-and-forget
 - **With Invalidation**: Refetch affected queries
 - **Optimistic**: Update UI before server response
 - **With Rollback**: Revert on error
 
 ### 5. Error Handling
+
 - Queries: Error boundaries + error components
 - Mutations: onError callbacks + error states
 - GraphQL errors: Check result.errors array
 - Network errors: Try/catch in queryFn
 
 ### 6. Performance Tips
+
 - Set appropriate `staleTime` to reduce refetches
 - Use `prefetch` on links for instant navigation
 - Leverage optimistic updates for snappy UI

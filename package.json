@@ -4,30 +4,30 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "concurrently yarn:dev:*",
-    "dev:router": "vinxi dev",
-    "dev:gql-codegen": "yarn gql:codegen:watch",
+    "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
     "format": "prettier --write .",
     "check:format": "prettier --list-different .",
-    "check:types": "yarn gql:codegen && tsc --project tsconfig.json",
-    "gql:codegen": "graphql-codegen --config codegen.ts",
-    "gql:codegen:watch": "graphql-codegen --config codegen.ts --watch"
+    "check:types": "npx gql.tada generate output && npx gql.tada check && tsc --project tsconfig.json",
+    "gql:doctor": "npx gql.tada doctor",
+    "gql:check": "npx gql.tada check",
+    "gql:schema": "npx gql.tada generate schema https://swapi-graphql.netlify.app/graphql",
+    "gql:turbo": "npx gql.tada turbo",
+    "gql:generate": "npx gql.tada generate output"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.79.0",
     "@tanstack/react-router": "^1.120.11",
     "@tanstack/react-router-devtools": "^1.120.11",
     "@tanstack/react-start": "^1.120.11",
-    "concurrently": "^9.1.2",
+    "gql.tada": "^1.8.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
     "vinxi": "0.5.3"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.6",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
     "@parcel/watcher": "^2.5.1",
     "@tanstack/react-query-devtools": "^5.79.0",

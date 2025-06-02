@@ -33,6 +33,15 @@ function RouteComponent() {
         {film?.openingCrawl}
       </div>
 
+      <h2 className="mb-4 text-2xl font-bold text-blue-800">Planets</h2>
+      <ul className="mb-8 list-disc space-y-2">
+        {film?.planetConnection?.planets?.map(planet => (
+          <li key={planet?.name} className="ml-4 text-lg text-gray-800">
+            {planet?.name}
+          </li>
+        ))}
+      </ul>
+
       <button
         className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         onClick={() => navigate({ to: "/" })}

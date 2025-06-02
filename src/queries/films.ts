@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { graphql } from "~/graphql/";
+import { graphql } from "~/graphql";
 import { request } from "~/graphql/request";
 
 /**
@@ -15,6 +15,11 @@ export const all = () =>
             films {
               id
               title
+              planetConnection {
+                planets {
+                  name
+                }
+              }
               releaseDate
               director
               speciesConnection {
@@ -52,6 +57,11 @@ export const byId = (filmId: string) =>
             producers
             releaseDate
             openingCrawl
+            planetConnection {
+              planets {
+                name
+              }
+            }
           }
         }
       `);

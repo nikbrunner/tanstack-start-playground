@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import type { ExecutionResult } from "graphql";
-
-import type { TypedDocumentString } from "./graphql";
+import type { TadaDocumentNode } from "gql.tada";
+import { print, type ExecutionResult } from "graphql";
 
 const graphqlServerFn = createServerFn()
   .validator((input: { query: string; variables?: unknown }) => input)
@@ -32,10 +31,10 @@ const graphqlServerFn = createServerFn()
   });
 
 export async function request<TResult, TVariables>(
-  query: TypedDocumentString<TResult, TVariables>,
+  query: TadaDocumentNode<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ): Promise<ExecutionResult<TResult>> {
-  const queryString = query.toString();
+  const queryString = print(query);
 
   return graphqlServerFn({
     data: { query: queryString, variables }
